@@ -58,7 +58,7 @@ class MultiOplogReplayer(object):
         oplog_vecs = []
         for ns, oplogs in list(self._map.items()):
             dbname, collname = mongo_utils.parse_namespace(ns)
-            n = len(oplogs) / self._batch_size + 1
+            n = len(oplogs) // self._batch_size + 1
             if n == 1:
                 vec = OplogVector(dbname, collname)
                 for oplog in oplogs:
