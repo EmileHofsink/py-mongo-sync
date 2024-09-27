@@ -1,7 +1,7 @@
 import sys
 import time
 import datetime
-import exceptions
+import builtins
 import gevent
 from mongosync.config import Config
 from mongosync.logger import Logger
@@ -84,7 +84,7 @@ class CommonSyncer(object):
         # clear data manually if necessary
         try:
             self._sync()
-        except exceptions.KeyboardInterrupt:
+        except KeyboardInterrupt:
             log.info('keyboard interrupt')
 
     def _sync(self):
