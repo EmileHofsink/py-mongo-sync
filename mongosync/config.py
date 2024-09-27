@@ -1,6 +1,7 @@
 import sys
 import logging
 import pymongo
+import io
 from mongosync.mongo_utils import get_version
 from mongosync.data_filter import DataFilter
 
@@ -82,8 +83,8 @@ class Config(object):
         """ Output to logfile or stdout.
         """
         if isinstance(logger, logging.Logger):
-            f = lambda s: logger.info(s)
-        elif isinstance(logger, file):
+            f = logger.info
+        elif isinstance(logger, io.TextIOWrapper):
             f = lambda s: logger.write('%s\n' % s)
         else:
             raise Exception('error logger')
