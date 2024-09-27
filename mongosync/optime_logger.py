@@ -8,7 +8,7 @@ class OptimeLogger(object):
     """
     def __init__(self, filepath):
         assert filepath
-        assert isinstance(filepath, str) or isinstance(filepath, unicode)
+        assert isinstance(filepath, str) or isinstance(filepath, str)
         if not os.path.exists(filepath):
             os.mknod(filepath)
         assert os.path.isfile(filepath)
@@ -75,4 +75,4 @@ if __name__ == '__main__':
     optime = optime_logger.read()
     assert optime is None
     assert optime_logger.filesize == 0
-    print 'test pass'
+    print('test pass')

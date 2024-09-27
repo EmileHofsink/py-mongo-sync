@@ -43,7 +43,7 @@ class ConfigFile(object):
 
                 if 'colls' in dbentry and dbentry['colls']:
                     for collentry in dbentry['colls']:
-                        if isinstance(collentry, str) or isinstance(collentry, unicode):
+                        if isinstance(collentry, str) or isinstance(collentry, str):
                             collname = collentry.strip()
                             ns = gen_namespace(dbname, collname)
                             conf.data_filter.add_include_coll(ns)

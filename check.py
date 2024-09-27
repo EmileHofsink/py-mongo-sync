@@ -9,15 +9,15 @@ def connect(uri):
 
 
 def info(s):
-    print s
+    print(s)
 
 
 def warn(s):
-    print '\033[01;33;40m%s\033[0m' % s
+    print('\033[01;33;40m%s\033[0m' % s)
 
 
 def error(s):
-    print '\033[01;31;40m%s\033[0m' % s
+    print('\033[01;31;40m%s\033[0m' % s)
 
 
 def get_standard_index_name(index_items):
@@ -26,12 +26,12 @@ def get_standard_index_name(index_items):
     """
     index_keys = []
     for key, direction in index_items['key']:
-        if isinstance(direction, int) or isinstance(direction, long) or isinstance(direction, float):
+        if isinstance(direction, int) or isinstance(direction, int) or isinstance(direction, float):
             index_keys.append('%s_%d' % (key, int(direction)))
-        elif isinstance(direction, str) or isinstance(direction, unicode):
+        elif isinstance(direction, str) or isinstance(direction, str):
             index_keys.append('%s_%s' % (key, direction))
         else:
-            print 'invalid direction for', index_items['key']
+            print('invalid direction for', index_items['key'])
             sys.exit(1)
     return '_'.join(index_keys)
 
@@ -43,13 +43,13 @@ ignore_colls = ['system.users', 'system.profile']
 if __name__ == '__main__':
     conf = CheckCommandOptions.parse()
 
-    print '=' * 48
-    print 'origin :  %s' % conf.src_uri
-    print 'target :  %s' % conf.dst_uri
-    print 'dbs    :  %s' % conf.dbs
-    print 'src db :  %s' % conf.src_db
-    print 'dst db :  %s' % conf.dst_db
-    print '=' * 48
+    print('=' * 48)
+    print('origin :  %s' % conf.src_uri)
+    print('target :  %s' % conf.dst_uri)
+    print('dbs    :  %s' % conf.dbs)
+    print('src db :  %s' % conf.src_db)
+    print('dst db :  %s' % conf.dst_db)
+    print('=' * 48)
 
     src_mc = connect(conf.src_uri)
     dst_mc = connect(conf.dst_uri)
@@ -70,9 +70,9 @@ if __name__ == '__main__':
 
     # check data
     data_pass = True
-    print '-' * 88
-    print '%s%s%s%s' % ('RESULT'.ljust(8), 'COLL'.ljust(48), 'ORIGIN'.rjust(16), 'TARGET'.rjust(16))
-    print '-' * 88
+    print('-' * 88)
+    print('%s%s%s%s' % ('RESULT'.ljust(8), 'COLL'.ljust(48), 'ORIGIN'.rjust(16), 'TARGET'.rjust(16)))
+    print('-' * 88)
     for dbname in sorted(src_mc.database_names()):
         if dbname in ignore_dbs:
             continue
@@ -95,13 +95,13 @@ if __name__ == '__main__':
                 res = 'ERR'
                 data_pass = False
                 warn('%s%s%s%s' % (res.ljust(8), (dbname + '.' + collname).ljust(48), str(src_coll_cnt).rjust(16), str(dst_coll_cnt).rjust(16)))
-    print '-' * 96
+    print('-' * 96)
 
     # check index
     index_pass = True
-    print '-' * 120
-    print '%s%s%s' % ('RES'.ljust(8), 'COLL'.ljust(48), 'INDEX'.rjust(64))
-    print '-' * 120
+    print('-' * 120)
+    print('%s%s%s' % ('RES'.ljust(8), 'COLL'.ljust(48), 'INDEX'.rjust(64)))
+    print('-' * 120)
     for dbname in sorted(src_mc.database_names()):
         if dbname in ignore_dbs:
             continue
@@ -119,10 +119,10 @@ if __name__ == '__main__':
             dst_index_info = dst_mc[ddb][collname].index_information()
             src_index_names = set()
             dst_index_names = set()
-            for index_items in src_index_info.itervalues():
+            for index_items in src_index_info.values():
                 index_name = get_standard_index_name(index_items)
                 src_index_names.add(index_name)
-            for index_items in dst_index_info.itervalues():
+            for index_items in dst_index_info.values():
                 index_name = get_standard_index_name(index_items)
                 dst_index_names.add(index_name)
             for index_name in src_index_names:
@@ -133,7 +133,7 @@ if __name__ == '__main__':
                     res = 'ERR'
                     index_pass = False
                     warn('%s%s%s' % (res.ljust(8), (dbname + '.' + collname).ljust(48), index_name.rjust(64)))
-    print '-' * 120
+    print('-' * 120)
 
     if data_pass:
         info('data: SUCCESS')

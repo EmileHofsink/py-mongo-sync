@@ -52,7 +52,7 @@ def gen_doc_with_fields(doc, include_fields):
 def merge_doc(doc1, doc2):
     """ Merge doc2 into doc1.
     """
-    for k, v in doc2.iteritems():
+    for k, v in list(doc2.items()):
         if isinstance(v, collections.Mapping):
             doc1[k] = merge_doc(doc1.get(k, {}), v)
         else:
@@ -74,4 +74,4 @@ if __name__ == '__main__':
     assert gen_doc_with_fields(doc, ['a.b.c']) == doc1
     assert gen_doc_with_fields(doc, ['a.b.d']) == doc2
 
-    print 'test cases all pass'
+    print('test cases all pass')

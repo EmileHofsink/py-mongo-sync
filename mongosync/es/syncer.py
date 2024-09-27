@@ -87,7 +87,7 @@ class EsSyncer(CommonSyncer):
                         groups.append(actions)
                         actions = []
                     if len(groups) == groups_max:
-                        threads = [gevent.spawn(self._dst.bulk_write, groups[i]) for i in xrange(groups_max)]
+                        threads = [gevent.spawn(self._dst.bulk_write, groups[i]) for i in range(groups_max)]
                         gevent.joinall(threads, raise_error=True)
                         groups = []
 
@@ -96,7 +96,7 @@ class EsSyncer(CommonSyncer):
                         log.info('    %s.%s %d/%d (%.2f%%)' % (src_dbname, src_collname, n, count, float(n)/count*100))
 
                 if len(groups) > 0:
-                    threads = [gevent.spawn(self._dst.bulk_write, groups[i]) for i in xrange(len(groups))]
+                    threads = [gevent.spawn(self._dst.bulk_write, groups[i]) for i in range(len(groups))]
                     gevent.joinall(threads, raise_error=True)
                 if len(actions) > 0:
                     elasticsearch.helpers.bulk(client=self._dst.client(), actions=actions)
@@ -139,7 +139,7 @@ class EsSyncer(CommonSyncer):
                             log.error('cursor is dead')
                             raise pymongo.errors.AutoReconnect
 
-                        oplog = cursor.next()
+                        oplog = next(cursor)
                         n_total += 1
 
                         if not valid_start_optime:
@@ -181,7 +181,7 @@ class EsSyncer(CommonSyncer):
 
                             if '$set' in oplog['o']:
                                 doc = {}
-                                for k, v in oplog['o']['$set'].iteritems():
+                                for k, v in list(oplog['o']['$set'].items()):
                                     if not fields or k in fields:
                                         sub_doc = doc_flat_to_nested(k.split('.'), v)
                                         merge_doc(doc, sub_doc)
@@ -196,7 +196,7 @@ class EsSyncer(CommonSyncer):
 
                             if '$unset' in oplog['o']:
                                 script_statements = []
-                                for keypath in oplog['o']['$unset'].iterkeys():
+                                for keypath in list(oplog['o']['$unset'].keys()):
                                     if not fields or keypath in fields:
                                         pos = keypath.rfind('.')
                                         if pos >= 0:

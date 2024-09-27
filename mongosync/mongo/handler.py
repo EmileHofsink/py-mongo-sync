@@ -23,7 +23,7 @@ class MongoHandler(object):
         """ Connect to server.
         """
         try:
-            if isinstance(self._conf.hosts, unicode):
+            if isinstance(self._conf.hosts, str):
                 host, port = mongo_utils.parse_hostportstr(self._conf.hosts)
                 self._mc = mongo_utils.connect(host, port,
                                                authdb=self._conf.authdb,

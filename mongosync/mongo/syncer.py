@@ -38,7 +38,7 @@ class MongoSyncer(CommonSyncer):
             """
             res = []
             for key, direction in key_direction_list:
-                if isinstance(direction, float) or isinstance(direction, long):
+                if isinstance(direction, float) or isinstance(direction, int):
                     direction = int(direction)
                 res.append((key, direction))
             return res
@@ -46,7 +46,7 @@ class MongoSyncer(CommonSyncer):
         dbname, collname = namespace_tuple
         dst_dbname, dst_collname = self._conf.db_coll_mapping(dbname, collname)
         index_info = self._src.client()[dbname][collname].index_information()
-        for name, info in index_info.iteritems():
+        for name, info in list(index_info.items()):
             keys = info['key']
             options = {}
             options['name'] = name
@@ -107,7 +107,7 @@ class MongoSyncer(CommonSyncer):
                         groups.append(reqs)
                         reqs = []
                     if len(groups) == groups_max:
-                        threads = [gevent.spawn(self._dst.bulk_write, dst_dbname, dst_collname, groups[i], ordered=False, ignore_duplicate_key_error=True) for i in xrange(groups_max)]
+                        threads = [gevent.spawn(self._dst.bulk_write, dst_dbname, dst_collname, groups[i], ordered=False, ignore_duplicate_key_error=True) for i in range(groups_max)]
                         gevent.joinall(threads, raise_error=True)
                         groups = []
 
@@ -117,7 +117,7 @@ class MongoSyncer(CommonSyncer):
                         n = 0
 
                 if len(groups) > 0:
-                    threads = [gevent.spawn(self._dst.bulk_write, dst_dbname, dst_collname, groups[i], ordered=False, ignore_duplicate_key_error=True) for i in xrange(len(groups))]
+                    threads = [gevent.spawn(self._dst.bulk_write, dst_dbname, dst_collname, groups[i], ordered=False, ignore_duplicate_key_error=True) for i in range(len(groups))]
                     gevent.joinall(threads, raise_error=True)
                 if len(reqs) > 0:
                     self._dst.bulk_write(dst_dbname, dst_collname, reqs, ordered=False, ignore_duplicate_key_error=True)
@@ -208,7 +208,7 @@ class MongoSyncer(CommonSyncer):
                         groups.append(reqs)
                         reqs = []
                     if len(groups) == groups_max:
-                        threads = [gevent.spawn(self._dst.bulk_write, dst_dbname, dst_collname, groups[i], ordered=False, ignore_duplicate_key_error=True) for i in xrange(groups_max)]
+                        threads = [gevent.spawn(self._dst.bulk_write, dst_dbname, dst_collname, groups[i], ordered=False, ignore_duplicate_key_error=True) for i in range(groups_max)]
                         gevent.joinall(threads, raise_error=True)
                         groups = []
 
@@ -219,7 +219,7 @@ class MongoSyncer(CommonSyncer):
                         n = 0
 
                 if len(groups) > 0:
-                    threads = [gevent.spawn(self._dst.bulk_write, dst_dbname, dst_collname, groups[i], ordered=False, ignore_duplicate_key_error=True) for i in xrange(len(groups))]
+                    threads = [gevent.spawn(self._dst.bulk_write, dst_dbname, dst_collname, groups[i], ordered=False, ignore_duplicate_key_error=True) for i in range(len(groups))]
                     gevent.joinall(threads, raise_error=True)
                 if len(reqs) > 0:
                     self._dst.bulk_write(dst_dbname, dst_collname, reqs, ordered=False, ignore_duplicate_key_error=True)
@@ -271,7 +271,7 @@ class MongoSyncer(CommonSyncer):
                         log.error('cursor is dead')
                         raise pymongo.errors.AutoReconnect
 
-                    oplog = cursor.next()
+                    oplog = next(cursor)
                     n_total += 1
 
                     # check start optime once

@@ -4,12 +4,12 @@ import bson
 
 def gen_uri(hosts, username=None, password=None, authdb='admin'):
     def parse(hosts):
-        if isinstance(hosts, str) or isinstance(hosts, unicode):
+        if isinstance(hosts, str) or isinstance(hosts, str):
             return hosts
         if isinstance(hosts, list) or isinstance(hosts, tuple):
             hostportstrs = []
             for host in hosts:
-                if isinstance(host, str) or isinstance(host, unicode):
+                if isinstance(host, str) or isinstance(host, str):
                     hostportstrs.append(host)
                     continue
                 if isinstance(host, tuple):
@@ -26,7 +26,7 @@ def gen_uri(hosts, username=None, password=None, authdb='admin'):
         if len(host_port_tuple) != 2:
             raise Exception('invalid tuple length: %s', (host_port_tuple,))
         host, port = host_port_tuple
-        if not isinstance(host, str) and not isinstance(host, unicode):
+        if not isinstance(host, str) and not isinstance(host, str):
             raise Exception('invalid host in tuple: %s' % (host_port_tuple,))
         if not isinstance(port, int):
             raise Exception('invalid port in tuple: %s' % (host_port_tuple,))
@@ -80,7 +80,7 @@ def get_version(arg):
     """
     if isinstance(arg, pymongo.MongoClient):
         return arg.server_info()['version']
-    elif isinstance(arg, str) or isinstance(arg, unicode):
+    elif isinstance(arg, str) or isinstance(arg, str):
         host, port = parse_hostportstr(arg)
         with pymongo.MongoClient(host, port, connect=True, serverSelectionTimeoutMS=3000) as mc:
             return mc.server_info()['version']

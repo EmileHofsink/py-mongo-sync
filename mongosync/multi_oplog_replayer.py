@@ -1,7 +1,7 @@
 import pymongo
 import gevent
 import mmh3
-import mongo_utils
+from . import mongo_utils
 from mongosync.mongo.syncer import MongoHandler
 from mongosync.logger import Logger
 
@@ -56,7 +56,7 @@ class MultiOplogReplayer(object):
         """ Apply oplogs.
         """
         oplog_vecs = []
-        for ns, oplogs in self._map.iteritems():
+        for ns, oplogs in list(self._map.items()):
             dbname, collname = mongo_utils.parse_namespace(ns)
             n = len(oplogs) / self._batch_size + 1
             if n == 1:
@@ -67,7 +67,7 @@ class MultiOplogReplayer(object):
                     vec._oplogs.append(op)
                 oplog_vecs.append(vec)
             else:
-                vecs = [OplogVector(dbname, collname) for i in xrange(n)]
+                vecs = [OplogVector(dbname, collname) for i in range(n)]
                 for oplog in oplogs:
                     op = self.__convert(oplog)
                     assert op is not None
@@ -104,7 +104,7 @@ class MultiOplogReplayer(object):
             # it could be an update or replace
             # @ref https://docs.mongodb.com/manual/reference/limits/#naming-restrictions
             is_update = False
-            for key in oplog['o'].iterkeys():
+            for key in list(oplog['o'].keys()):
                 if key[0] == '$':
                     is_update = True
                     break

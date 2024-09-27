@@ -56,11 +56,11 @@ class Config(object):
 
     @property
     def dbmap_str(self):
-        return ', '.join(['%s => %s' % (k, v) for k, v in self.dbmap.iteritems()])
+        return ', '.join(['%s => %s' % (k, v) for k, v in list(self.dbmap.items())])
 
     @property
     def fieldmap_str(self):
-        return ', '.join(['%s {%s}' % (k, ', '.join(v)) for k, v in self.fieldmap.iteritems()])
+        return ', '.join(['%s {%s}' % (k, ', '.join(v)) for k, v in list(self.fieldmap.items())])
 
     def db_mapping(self, dbname):
         mapping_dbname = self.dbmap.get(dbname.strip())
@@ -73,7 +73,7 @@ class Config(object):
         return '%s.%s' % (self.db_mapping(dbname.strip()), collname.strip())
 
     def hostportstr(self, hosts):
-        if isinstance(hosts, str) or isinstance(hosts, unicode):
+        if isinstance(hosts, str) or isinstance(hosts, str):
             return hosts
         elif isinstance(hosts, list):
             return ', '.join(hosts)
@@ -93,12 +93,12 @@ class Config(object):
         f('src authdb      :  %s' % self.src_conf.authdb)
         f('src username    :  %s' % self.src_conf.username)
         f('src password    :  %s' % self.src_conf.password)
-        if isinstance(self.src_conf.hosts, str) or isinstance(self.src_conf.hosts, unicode):
+        if isinstance(self.src_conf.hosts, str) or isinstance(self.src_conf.hosts, str):
             f('src db version  :  %s' % get_version(self.src_conf.hosts))
 
         f('dst hostportstr :  %s' % self.dst_hostportstr)
         if isinstance(self.dst_conf, MongoConfig):
-            if isinstance(self.dst_conf.hosts, str) or isinstance(self.dst_conf.hosts, unicode):
+            if isinstance(self.dst_conf.hosts, str) or isinstance(self.dst_conf.hosts, str):
                 f('dst authdb      :  %s' % self.dst_conf.authdb)
                 f('dst username    :  %s' % self.dst_conf.username)
                 f('dst password    :  %s' % self.dst_conf.password)
