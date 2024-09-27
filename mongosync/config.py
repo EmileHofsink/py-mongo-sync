@@ -130,13 +130,12 @@ class MongoSyncer:
 
     def _connect_to_mongodb(self):
         # Implementation of MongoDB connection logic
-        logging.debug(f"Connecting to MongoDB at {self._conf.src_hostportstr}")
+        logging.debug(f"Connecting to MongoDB at {self._conf.src_conf.hosts}")
         try:
-            # Construct the MongoDB URI with authentication details
-            uri = f"mongodb://{self._conf.src_conf.username}:{self._conf.src_conf.password}@{self._conf.src_hostportstr}/{self._conf.src_conf.authdb}"
-            client = MongoClient(uri)
-            # Verify connection by listing databases
-            client.list_database_names()
+            client = MongoClient(self._conf.src_conf.hosts)
+            db = client[self._conf.src_conf.authdb]
+            if self._conf.src_conf.username and self._conf.src_conf.password:
+                db.authenticate(self._conf.src_conf.username, self._conf.src_conf.password)
             logging.debug("Successfully connected to MongoDB")
         except pymongo.errors.PyMongoError as e:
             logging.error(f"MongoDB connection error: {e}")
