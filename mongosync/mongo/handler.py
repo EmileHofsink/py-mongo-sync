@@ -75,13 +75,9 @@ class MongoHandler(object):
     def bulk_write(self, dbname, collname, reqs, ordered=True, ignore_duplicate_key_error=False):
         """ Bulk write until success.
         """
-        print('db name %s', dbname)
-        print('coll name %s', collname)
         
         # Filter out the $v field from the update operations
         for req in reqs:
-            print(req)
-            print(req._doc)
             if isinstance(req, pymongo.UpdateOne) or isinstance(req, pymongo.UpdateMany):
                 update_doc = req._doc
                 if '$v' in update_doc:
