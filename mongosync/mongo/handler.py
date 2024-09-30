@@ -79,7 +79,7 @@ class MongoHandler(object):
         # Filter out the $v field from the update operations
         for req in reqs:
             if isinstance(req, pymongo.UpdateOne) or isinstance(req, pymongo.UpdateMany):
-                if '$v' in req._doc['u']:
+                if 'u' in req._doc and '$v' in req._doc['u']:
                     del req._doc['u']['$v']
                     
         while True:
