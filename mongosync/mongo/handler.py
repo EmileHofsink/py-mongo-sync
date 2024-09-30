@@ -75,9 +75,12 @@ class MongoHandler(object):
     def bulk_write(self, dbname, collname, reqs, ordered=True, ignore_duplicate_key_error=False):
         """ Bulk write until success.
         """
-
+        print('db name %s', dbname)
+        print('coll name %s', collname)
+        
         # Filter out the $v field from the update operations
         for req in reqs:
+            print(req._doc)
             if isinstance(req, pymongo.UpdateOne) or isinstance(req, pymongo.UpdateMany):
                 if 'u' in req._doc and '$v' in req._doc['u']:
                     del req._doc['u']['$v']
@@ -123,7 +126,7 @@ class MongoHandler(object):
                         except Exception as e:
                             # generally it's an odd oplog that program cannot process
                             # so abort it and bugfix
-                            log.error('%s when excuting %s on %s.%s' % (e, req, dbname, collname))
+                            log.error('Getting: %s, when excuting %s on %s.%s' % (e, req, dbname, collname))
                             sys.exit(1)
 
     def tail_oplog(self, start_optime=None, await_time_ms=None):
