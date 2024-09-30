@@ -80,6 +80,7 @@ class MongoHandler(object):
         
         # Filter out the $v field from the update operations
         for req in reqs:
+            print(req)
             print(req._doc)
             if isinstance(req, pymongo.UpdateOne) or isinstance(req, pymongo.UpdateMany):
                 update_doc = req._doc
