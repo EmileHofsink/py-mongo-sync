@@ -82,8 +82,12 @@ class MongoHandler(object):
         for req in reqs:
             print(req._doc)
             if isinstance(req, pymongo.UpdateOne) or isinstance(req, pymongo.UpdateMany):
-                if 'u' in req._doc and '$v' in req._doc['u']:
-                    del req._doc['u']['$v']
+                update_doc = req._doc
+                if '$v' in update_doc:
+                    del update_doc['$v']
+                # Also check nested $set operations
+                if '$set' in update_doc and '$v' in update_doc['$set']:
+                    del update_doc['$set']['$v']
                     
         while True:
             try:
