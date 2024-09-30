@@ -161,6 +161,8 @@ class CommonSyncer(object):
         n_points = n_partitions - 1
         max_chunk_size = ((collstats['count'] / (n_partitions - 1) - 1) * 2 * collstats['avgObjSize']) / 1024 / 1024
 
+        max_chunk_size = max(1, min(max_chunk_size, 1024))
+
         if max_chunk_size <= 0:
             return []
 
