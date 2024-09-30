@@ -138,6 +138,12 @@ class MongoHandler(object):
         """ Apply oplog.
         """
         dbname, collname = mongo_utils.parse_namespace(oplog['ns'])
+        new_doc = oplog['o']
+
+        # Remove the $v field from the update operation
+        if '$v' in new_doc:
+            del new_doc['$v']
+
         while True:
             try:
                 op = oplog['op']  # 'n' or 'i' or 'u' or 'c' or 'd'
