@@ -187,7 +187,7 @@ class MongoHandler(object):
                 if self._mc.is_mongos and oplog['op'] == 'u' and 'the (immutable) field' in str(e):
                     old_doc = self._mc[dbname][collname].find_one(oplog['o2'])
                     if not old_doc:
-                        log.error('replay update failed: document not found:', oplog['o2'])
+                        log.error('replay update failed: document not found: %s', oplog['o2'])
                         sys.exit(1)
                     if '$set' in oplog['o']:
                         new_doc = old_doc.update(oplog['o']['$set'])
@@ -199,10 +199,10 @@ class MongoHandler(object):
                     # delete old document
                     res = self._mc[dbname][collname].delete_one(oplog['o2'])
                     if res.deleted_count != 1:
-                        log.error('replay update failed: delete old document failed:', oplog['o2'])
+                        log.error('replay update failed: delete old document failed: %s', oplog['o2'])
                         sys.exit(1)
                     # insert new document
                     res = self._dst_mc[dbname][collname].insert_one(new_doc)
                     if not res.inserted_id:
-                        log.error('replay update failed: insert new document failed:', new_doc)
+                        log.error('replay update failed: insert new document failed: %s', new_doc)
                         sys.exit(1)
